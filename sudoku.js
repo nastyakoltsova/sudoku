@@ -22,20 +22,32 @@ function solve(boardString) {
         return null; // возвращаем null если все ячейки заполнены
     };
 
+    // функция поиска первой заполненной ячейки
+    const findFull = (puzzle) => {
+        for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 9; j++) {
+                if (puzzle[i][j] !== "-") {
+                    return [i, j];
+                }
+            }
+        }
+        return null; // возвращаем null если все ячейки пустые
+    };
+
     // функция проверки повторных номеров
     const check = (number, position, puzzle) => {
         const [i, j] = position;
 
         // в столбце
         for (let x = 0; x < 9; x++) {
-            if (puzzle[x][j] === number) { // && x !== i
+            if (puzzle[x][j] === number && x !== i) { // && x !== i
                 return false; // если есть такая же цифра в столбце
             }
         }
 
         // в строке
         for (let x = 0; x < 9; x++) {
-            if (puzzle[i][x] === number) { // && x !== j
+            if (puzzle[i][x] === number && x !== j) { // && x !== j
                 return false; // если есть такая же цифра в строке
             }
         }
@@ -46,7 +58,7 @@ function solve(boardString) {
 
         for (let x = boxX; x < boxX + 3; x++) {
             for (let y = boxY; y < boxY + 3; y++) {
-                if (puzzle[x][y] === number) { // && x !== i && y !== j
+                if (puzzle[x][y] === number && x !== i && y !== j) { // && x !== i && y !== j
                     return false; // если есть такая же цифра в квадрате
                 }
             }
@@ -79,7 +91,17 @@ function solve(boardString) {
         return false; // если решено неправильно
     };
 
-    decision(); // решение
+    if (findFull(puzzle) !== null) { // если есть заполненные ячейки
+        const [r, c] = findFull(puzzle);
+        const num = puzzle[r][c];
+        const checking = check(num, [r, c], puzzle);
+        if (!checking) { // проверяем, есть ли такие же числа в строке/столбце/квадрате
+            return null; // если есть, значит неправильные входные данные
+        }
+        decision(); // если нет повторов, то решаем
+        return puzzle;
+    }
+    decision(); // если поле пустое, то заполняем его
     return puzzle;
 }
 
@@ -89,6 +111,10 @@ function solve(boardString) {
  */
 
 function isSolved(board) {
+    if (board === null) { // если неправильные входные данные => не решено
+        return false;
+    }
+
     let result = 0;
     for (let i = 0; i < 9; i++) {
         for (let j = 0; j < 9; j++) {
@@ -116,7 +142,7 @@ function prettyBoard(board) {
                     let res = board[j][i] + '\n';
                     xx.push(res);
                 } else {
-                    let res = board[j][i] + '    ';
+                    let res = board[j][i] + '     ';
                     xx.push(res);
                 }
             } else {
@@ -125,7 +151,7 @@ function prettyBoard(board) {
             }
         }
     }
-console.log(xx.join(''))
+    console.log(xx.join(''));
 }
 
 // Экспортировать функции для использования в другом файле (например, readAndSolve.js).
