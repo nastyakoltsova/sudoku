@@ -84,7 +84,17 @@ function solve(boardString) {
  * Принимает игровое поле в том формате, в котором его вернули из функции solve.
  * Возвращает булевое значение — решено это игровое поле или нет.
  */
-function isSolved(board) {}
+
+function isSolved(board) {
+  let result = 0;
+  for (let i = 0; i < 9; i += 1) {
+    for (let j = 0; j < 9; j += 1) {
+      res += Number(board[i][j]);
+    }
+  }
+
+  return result === 405;
+}
 
 /**
  * Принимает игровое поле в том формате, в котором его вернули из функции solve.
