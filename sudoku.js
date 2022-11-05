@@ -11,7 +11,14 @@ function solve(boardString) {
  * Возвращает булевое значение — решено это игровое поле или нет.
  */
 function isSolved(board) {
+  let result = 0;
+  for (let i = 0; i < 9; i += 1) {
+    for (let j = 0; j < 9; j += 1) {
+      res += Number(board[i][j]);
+    }
+  }
 
+  return result === 405;
 }
 
 /**
